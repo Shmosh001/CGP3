@@ -217,7 +217,17 @@ int VoxelVolume::getMCVertIdx(int x, int y, int z)
 {
     // stub, needs completing
     // refer to data structures at the top of voxels.cpp and mesh.cpp
-    return 0;
+
+    int bits = 0;    
+
+    for (int i = 0; i < 8; ++i)
+    {
+        if(get(x + cubePos[i][0], y + cubePos[i][1], z + cubePos[i][2]))
+        {
+            bits |= (int) pow(2, i);
+        }
+    }
+    return bits;
 }
 
 int VoxelVolume::getMCEdgeIdx(int vcode)

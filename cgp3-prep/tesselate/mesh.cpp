@@ -894,6 +894,54 @@ void Mesh::boxFit(float sidelen)
 void Mesh::marchingCubes(VoxelVolume vox)
 {
     // stub, needs completing
+    int dimX, dimY, dimZ;
+    std::vector<cgp::Point> edgeVertex [12];
+
+
+    vox.getDim(dimX, dimY, dimZ);
+    for (int x = 0; x < dimX-1; ++x)
+    {
+        for (int y = 0; y < dimY-1; ++y)
+        {
+            for (int z = 0; z < dimZ-1; ++z)
+            {
+                int vertBit = vox.getMCVertIdx(x, y, z);
+                int edgeFlag = vox.getMCEdgeIdx(vertBit);
+                if(edgeFlag == 0)
+                {
+                    break;
+                }
+
+
+                //Find the point of intersection of the surface with each edge
+                for (int iEdge = 0; iEdge < 12; ++iEdge)
+                {
+                    if(edgeFlag & (1<<iEdge))
+                    {
+                        cgp::Point temp = vox.getMCEdgeXsect(iEdge);
+                        cgp::Point worldPoint = vox.getVoxelPos(temp.x, temp.y, temp.z);
+                        edgeVertex.push_back(worldPoint);
+                    }
+                }
+                
+                //Draw the triangles that were found.  There can be up to five per cube
+                for (int iTri = 0; i < 5; ++iTri)
+                {
+                    if(triangleTable[vertBit][3*iTri] < 0)
+                    {
+                        break;
+                    }
+
+
+                }
+
+
+                deriveVertNorms();
+
+            }
+        }
+    }
+
 }
 
 void Mesh::laplacianSmooth(int iter, float rate)
