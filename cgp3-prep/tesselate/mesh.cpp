@@ -895,7 +895,7 @@ void Mesh::marchingCubes(VoxelVolume vox)
 {
     // stub, needs completing
     int dimX, dimY, dimZ;
-    std::vector<cgp::Point> edgeVertex;
+    cgp::Point edgeVertex[12];
 
 
     vox.getDim(dimX, dimY, dimZ);
@@ -917,6 +917,7 @@ void Mesh::marchingCubes(VoxelVolume vox)
                 //Find the point of intersection of the surface with each edge
                 for (int iEdge = 0; iEdge < 12; ++iEdge)
                 {
+                    //if there is an intersection on this edge
                     if(edgeFlag & (1<<iEdge))
                     {
                         //edge intersection corresponding to an edge bit position
@@ -927,10 +928,12 @@ void Mesh::marchingCubes(VoxelVolume vox)
                         cgp::Vector diagonal; 
                         cgp::Point corner;
                         vox.getFrame(corner, diagonal);
-
-                        cgp::Point edgeV = cgp::Point(worldPoint.x + edgeXsect.x * diagonal.i/dimX, worldPoint.y + edgeXsect.y * diagonal.j/dimY, worldPoint.z + edgeXsect.z * diagonal.k/dimZ); // convert from voxel space to world coordinates
+                        cgp::Point edgeV;
+                        edgeV.x = worldPoint.x + edgeXsect.x * diagonal.i/dimX;
+                        edgeV.y = worldPoint.y + edgeXsect.y * diagonal.j/dimY;
+                        edgeV.z = worldPoint.z + edgeXsect.z * diagonal.k/dimZ; // convert from voxel space to world coordinates
     
-                        edgeVertex.push_back(edgeV);
+                        edgeVertex[iEdge] = edgeV;
                     }
                 }
                 
