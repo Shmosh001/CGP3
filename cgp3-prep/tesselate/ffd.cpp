@@ -78,11 +78,11 @@ void ffd::reset()
 {
     // stub, needs completing
     //loop through control points for each axis
-    for (int x = 0; x < dimx-1; ++x)
+    for (int x = 0; x < dimx; ++x)
     {
-        for (int y = 0; y < dimy-1; ++y)
+        for (int y = 0; y < dimy; ++y)
         {
-            for (int z = 0; z < dimz-1; ++z)
+            for (int z = 0; z < dimz; ++z)
             {
                 float px, py, pz;
                 px = (float) x / (float) (dimx-1);
