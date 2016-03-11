@@ -927,7 +927,8 @@ void Mesh::marchingCubes(VoxelVolume vox)
                         cgp::Vector diagonal; 
                         cgp::Point corner;
                         vox.getFrame(corner, diagonal);
-                        cgp::Point edgeV = cgp::Point(worldPoint.x + edgeXsect.x * diagonal.i, worldPoint.y + edgeXsect.y * diagonal.j, worldPoint.z + edgeXsect.z * diagonal.k); // convert from voxel space to world coordinates
+
+                        cgp::Point edgeV = cgp::Point(worldPoint.x + edgeXsect.x * diagonal.i/dimX, worldPoint.y + edgeXsect.y * diagonal.j/dimY, worldPoint.z + edgeXsect.z * diagonal.k/dimZ); // convert from voxel space to world coordinates
     
                         edgeVertex.push_back(edgeV);
                     }
@@ -956,8 +957,8 @@ void Mesh::marchingCubes(VoxelVolume vox)
         }
     }
     mergeVerts();
-    deriveVertNorms();
     deriveFaceNorms();
+    deriveVertNorms();
     
 
 }
