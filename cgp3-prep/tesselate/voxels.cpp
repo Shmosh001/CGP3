@@ -222,7 +222,7 @@ int VoxelVolume::getMCVertIdx(int x, int y, int z)
 
     for (int i = 0; i < 8; ++i)
     {
-        if(get(x + cubePos[i][0], y + cubePos[i][1], z + cubePos[i][2]))
+        if(!get(x + cubePos[i][0], y + cubePos[i][1], z + cubePos[i][2]))
         {
             bits |= (int) pow(2, i);
         }
