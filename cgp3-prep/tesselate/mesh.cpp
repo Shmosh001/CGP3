@@ -1003,7 +1003,7 @@ void Mesh::laplacianSmooth(int iter, float rate)
             int key = tempEdges[i].v[0];
             adjacencyList[key].push_back(tempEdges[i].v[1]);
             key = tempEdges[i].v[1];
-            adjacencyList[key].push_back(tempEdges[i].v[1]);
+            adjacencyList[key].push_back(tempEdges[i].v[0]);
         }//end loop through edges
 
     } //end for loop of triangles
