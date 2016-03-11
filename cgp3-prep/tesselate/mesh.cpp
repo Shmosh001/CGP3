@@ -969,6 +969,69 @@ void Mesh::marchingCubes(VoxelVolume vox)
 void Mesh::laplacianSmooth(int iter, float rate)
 {
     // stub, needs completing
+    //adjacency list for each vert
+    std::unordered_map<int, std::vector<int>> adjacencyList;
+    for (int x = 0; x < tris.size(); x++)  //loop through each triangle to get vectices
+    {
+        int vert0 = tris[x].v[0];
+        int vert1 = tris[x].v[1];
+        int vert2 = tris[x].v[2];
+
+        //vector of temporary edges
+        Edge tempEdges[3];
+        
+        //creating 3 edges and add to vector
+        Edge temp0;
+        temp0.v[0] = vert0;
+        temp0.v[1] = vert1;
+        tempEdges[0] = temp0;
+
+        Edge temp1;
+        temp1.v[0] = vert1;
+        temp1.v[1] = vert2;
+        tempEdges[1] = temp1;
+
+        Edge temp2;
+        temp2.v[0] = vert2;
+        temp2.v[1] = vert0;
+        tempEdges[2] = temp2;
+
+        //loop through edges
+        for (int i = 0; i < 3; ++i)
+        {
+            //key is vertex of edge and vector stores connecting vertices
+            int key = tempEdges[i].v[0];
+            adjacencyList[key].push_back(tempEdges[i].v[1]);
+            key = tempEdges[i].v[1];
+            adjacencyList[key].push_back(tempEdges[i].v[1]);
+        }//end loop through edges
+
+    } //end for loop of triangles
+
+    for (int i = 0; i < iter; ++i)
+    {
+        for (auto it = adjacencyList.begin(); it != adjacencyList.end(); it++)
+        {
+            int weight = 1 / it->second.size();
+
+            int xDeltaV = 0;
+            int yDeltaV = 0;
+            int zDeltaV = 0;
+            for (int j = 0; j < it->second.size(); ++j)
+            {
+                //change in position for x,y,z
+                xDeltaV = xDeltaV + weight * (verts[it->second[j]].x - verts[it->first].x);
+                yDeltaV = yDeltaV + weight * (verts[it->second[j]].y - verts[it->first].y);
+                zDeltaV = zDeltaV + weight * (verts[it->second[j]].z - verts[it->first].z);
+            }
+
+            //adjust x,y,z positions
+            verts[it->first].x = verts[it->first].x + rate * xDeltaV; 
+            verts[it->first].y = verts[it->first].y + rate * yDeltaV; 
+            verts[it->first].z = verts[it->first].z + rate * zDeltaV;
+        }
+    }
+    mergeVerts();
     deriveFaceNorms();
     deriveVertNorms();
 }
