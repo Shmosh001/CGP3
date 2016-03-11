@@ -924,14 +924,20 @@ void Mesh::marchingCubes(VoxelVolume vox)
                         cgp::Point edgeXsect = vox.getMCEdgeXsect(iEdge);
                         //origin point of voxel corresponding to x,y,z
                         cgp::Point worldPoint = vox.getVoxelPos(x, y, z);
-
-                        cgp::Vector diagonal; 
+                         
                         cgp::Point corner;
+                        cgp::Vector diagonal;
                         vox.getFrame(corner, diagonal);
                         cgp::Point edgeV;
-                        edgeV.x = worldPoint.x + edgeXsect.x * diagonal.i/(float)(dimX-1);
-                        edgeV.y = worldPoint.y + edgeXsect.y * diagonal.j/(float)(dimY-1);
-                        edgeV.z = worldPoint.z + edgeXsect.z * diagonal.k/(float)(dimZ-1); // convert from voxel space to world coordinates
+
+                        float px, py, pz;
+                        px = (float) edgeXsect.x / (float) (dimX-1);
+                        py = (float) edgeXsect.y / (float) (dimY-1);
+                        pz = (float) edgeXsect.z / (float) (dimZ-1);
+
+                        edgeV.x = worldPoint.x + px * (float) diagonal.i;
+                        edgeV.y = worldPoint.y + py * (float) diagonal.j;
+                        edgeV.z = worldPoint.z + pz * (float) diagonal.k; 
     
                         edgeVertex[iEdge] = edgeV;
                     }
