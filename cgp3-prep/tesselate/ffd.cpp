@@ -229,4 +229,50 @@ void ffd::setCP(int i, int j, int k, cgp::Point pnt)
 void ffd::deform(cgp::Point & pnt)
 {
     // stub, needs completing
+    float s = 0;
+    float t = 0;
+    float u = 0;
+    cgp::Vector S;
+    cgp::Vector T;
+    cgp::Vector U;
+
+    cgp::Point X;   //point with (s,t,u)
+    cgp::Point X0 = origin; //origin
+    cgp::Point XDif;    //difference between point and origin
+
+    //store cross products
+    cgp::Vector TxU;
+    cgp::Vector SxU;
+    cgp::Vector SxT;
+
+    //store dot products
+    float TxUdotXDif;
+    float SxUdotXDif;
+    float SxTdotXDif;
+
+    float TxUdotS;
+    float SxUdotT;
+    float SxTdotU;
+
+    //calculation for S
+    TxU.cross(T,U);
+    TxUdotXDif.dot(TxU, XDif);
+    TxUdotS.dot(TxU, S);
+    s = TxUdotXDif / TxUdotS;
+
+    //calculation for t
+    SxU.cross(S,U);
+    SxUdotXDif.dot(SxU, XDif);
+    SxUdotT.dot(SxU, T);
+    t = SxUdotXDif / SxUdotT;
+
+    //calculation for u
+    SxT.cross(S,T);
+    SxTdotXDif.dot(SxT, XDif);
+    SxTdotU.dot(SxT, U);
+    t = SxTdotXDif / SxTdotU;
+
+
+    
+
 }
