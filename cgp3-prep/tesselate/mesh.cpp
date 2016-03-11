@@ -956,8 +956,9 @@ void Mesh::marchingCubes(VoxelVolume vox)
         }
     }
     mergeVerts();
-    deriveFaceNorms();
     deriveVertNorms();
+    deriveFaceNorms();
+    
 
 }
 
