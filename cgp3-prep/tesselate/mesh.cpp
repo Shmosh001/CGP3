@@ -910,7 +910,7 @@ void Mesh::marchingCubes(VoxelVolume vox)
                 int edgeFlag = vox.getMCEdgeIdx(vertBit);
                 if(edgeFlag == 0)
                 {
-                    break;
+                    continue;
                 }
 
 
