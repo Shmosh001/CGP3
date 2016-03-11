@@ -1012,11 +1012,11 @@ void Mesh::laplacianSmooth(int iter, float rate)
     {
         for (auto it = adjacencyList.begin(); it != adjacencyList.end(); it++)
         {
-            int weight = 1 / it->second.size();
+            float weight = 1.0 / (float) it->second.size();
 
-            int xDeltaV = 0;
-            int yDeltaV = 0;
-            int zDeltaV = 0;
+            float xDeltaV = 0;
+            float yDeltaV = 0;
+            float zDeltaV = 0;
             for (int j = 0; j < it->second.size(); ++j)
             {
                 //change in position for x,y,z
