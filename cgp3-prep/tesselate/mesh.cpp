@@ -895,7 +895,7 @@ void Mesh::marchingCubes(VoxelVolume vox)
 {
     // stub, needs completing
     int dimX, dimY, dimZ;
-    std::vector<cgp::Point> edgeVertex [12];
+    std::vector<cgp::Point> edgeVertex;
 
 
     vox.getDim(dimX, dimY, dimZ);
@@ -905,6 +905,7 @@ void Mesh::marchingCubes(VoxelVolume vox)
         {
             for (int z = 0; z < dimZ-1; ++z)
             {
+                //vertex bit code for a voxel cell
                 int vertBit = vox.getMCVertIdx(x, y, z);
                 int edgeFlag = vox.getMCEdgeIdx(vertBit);
                 if(edgeFlag == 0)
@@ -918,29 +919,45 @@ void Mesh::marchingCubes(VoxelVolume vox)
                 {
                     if(edgeFlag & (1<<iEdge))
                     {
-                        cgp::Point temp = vox.getMCEdgeXsect(iEdge);
-                        cgp::Point worldPoint = vox.getVoxelPos(temp.x, temp.y, temp.z);
-                        edgeVertex.push_back(worldPoint);
+                        //edge intersection corresponding to an edge bit position
+                        cgp::Point edgeXsect = vox.getMCEdgeXsect(iEdge);
+                        //origin point of voxel corresponding to x,y,z
+                        cgp::Point worldPoint = vox.getVoxelPos(x, y, z);
+
+                        cgp::Vector diagonal; 
+                        cgp::Point corner;
+                        vox.getFrame(corner, diagonal);
+                        cgp::Point edgeV = cgp::Point(worldPoint.x + edgeXsect.x * diagonal.i, worldPoint.y + edgeXsect.y * diagonal.j, worldPoint.z + edgeXsect.z * diagonal.k); // convert from voxel space to world coordinates
+    
+                        edgeVertex.push_back(edgeV);
                     }
                 }
                 
                 //Draw the triangles that were found.  There can be up to five per cube
-                for (int iTri = 0; i < 5; ++iTri)
+                for (int iTri = 0; iTri < 5; ++iTri)
                 {
                     if(triangleTable[vertBit][3*iTri] < 0)
                     {
                         break;
                     }
 
+                    Triangle tempTri;
+                    //each corner
+                    for (int iCorner = 0; iCorner < 3; ++iCorner)
+                    {
+                        int iVertex = triangleTable[vertBit][3*iTri+iCorner];
+                        verts.push_back(edgeVertex[iVertex]);
+                        tempTri.v[iCorner] = verts.size() -1;
+                    }
 
+                    tris.push_back(tempTri);
                 }
-
-
-                deriveVertNorms();
-
             }
         }
     }
+    mergeVerts();
+    deriveFaceNorms();
+    deriveVertNorms();
 
 }
 
