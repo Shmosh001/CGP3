@@ -272,6 +272,8 @@ void ffd::deform(cgp::Point & pnt)
     SxTdotU = SxT.dot(U);
     u = SxTdotXDif / SxTdotU;
 
+    
+
     cgp::Vector sumL (0,0,0);
     for (int i = 0; i < dimx; ++i)
     {
@@ -299,9 +301,9 @@ void ffd::deform(cgp::Point & pnt)
 
         float result0 = nChoosek((float) dimx, (float) i) * pow(1 - s, dimx - i) * pow(s, i);
         sumM.mult(result0);
-        sumL.i = sumL.i + sumL.i;
-        sumL.j = sumL.j + sumL.j;
-        sumL.k = sumL.k + sumL.k; 
+        sumL.i = sumL.i + sumM.i;
+        sumL.j = sumL.j + sumM.j;
+        sumL.k = sumL.k + sumM.k; 
     }
 
     pnt.x = sumL.i;
