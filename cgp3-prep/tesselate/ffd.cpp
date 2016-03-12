@@ -279,16 +279,17 @@ void ffd::deform(cgp::Point & pnt)
 
 
     cgp::Vector sumL (0,0,0);
-    for (int i = 0; i < dimx; ++i)
+    for (int i = 0; i < dimx-1; ++i)
     {
         cgp::Vector sumM (0,0,0);
-        for (int j = 0; j < dimy; ++j)
+        for (int j = 0; j < dimy-1; ++j)
         {
             cgp::Vector sumN (0,0,0);
-            for (int k = 0; k < dimz; ++k)
+            for (int k = 0; k < dimz-1; ++k)
             {
-                float result2 = nChoosek((float) dimz, (float) k) *  (float) pow ((float)(1 - u), (float) (dimz - k)) * (float) pow((float) u, (float) k);
-                cgp::Vector P (getCP(i,j,k).x, getCP(i,j,k).y, getCP(i,j,k).z);
+                float result2 = nChoosek((float) dimz-1, (float) k) *  (float) pow((float)(1 - u), (float) (dimz-1 - k)) * (float) pow((float) u, (float) k);
+                cgp::Point point = getCP(i,j,k);
+                cgp::Vector P (point.x, point.y, point.z);
                 P.mult(result2);
                 sumN.i = sumN.i + P.i;
                 sumN.j = sumN.j + P.j;
@@ -296,14 +297,14 @@ void ffd::deform(cgp::Point & pnt)
 
             }
 
-            float result1 = nChoosek((float) dimy, (float) j) * (float) pow((float) (1 - t), (float) (dimy - j)) * (float) pow((float) t, (float) j);
+            float result1 = nChoosek((float) dimy-1, (float) j) * (float) pow((float) (1 - t), (float) (dimy-1 - j)) * (float) pow((float) t, (float) j);
             sumN.mult(result1);
             sumM.i = sumM.i + sumN.i;
             sumM.j = sumM.j + sumN.j;
             sumM.k = sumM.k + sumN.k; 
         }
 
-        float result0 = nChoosek((float) dimx, (float) i) * (float) pow((float)(1 - s), (float)(dimx - i)) * (float) pow((float) s, (float)i);
+        float result0 = nChoosek((float) dimx-1, (float) i) * (float) pow((float)(1 - s), (float)(dimx-1 - i)) * (float) pow((float) s, (float) i);
         sumM.mult(result0);
         sumL.i = sumL.i + sumM.i;
         sumL.j = sumL.j + sumM.j;
