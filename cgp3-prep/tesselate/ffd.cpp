@@ -232,13 +232,13 @@ void ffd::deform(cgp::Point & pnt)
     float s = 0;
     float t = 0;
     float u = 0;
-    cgp::Vector S;
-    cgp::Vector T;
-    cgp::Vector U;
+    cgp::Vector S (diagonal.i, 0, 0);
+    cgp::Vector T (0, diagonal.j, 0);
+    cgp::Vector U (0, 0, diagonal.k);
 
-    cgp::Point X;   //point with (s,t,u)
+    cgp::Point X = pnt;   //point with (s,t,u)
     cgp::Point X0 = origin; //origin
-    cgp::Point XDif;    //difference between point and origin
+    cgp::Vector XDif (X.x - X0.x, X.y - X0.y, X.z - X0.z);    //difference between point and origin
 
     //store cross products
     cgp::Vector TxU;
@@ -256,23 +256,70 @@ void ffd::deform(cgp::Point & pnt)
 
     //calculation for S
     TxU.cross(T,U);
-    TxUdotXDif.dot(TxU, XDif);
-    TxUdotS.dot(TxU, S);
+    TxUdotXDif = TxU.dot(XDif);
+    TxUdotS = TxU.dot(S);
     s = TxUdotXDif / TxUdotS;
 
     //calculation for t
     SxU.cross(S,U);
-    SxUdotXDif.dot(SxU, XDif);
-    SxUdotT.dot(SxU, T);
+    SxUdotXDif = SxU.dot(XDif);
+    SxUdotT = SxU.dot(T);
     t = SxUdotXDif / SxUdotT;
 
     //calculation for u
     SxT.cross(S,T);
-    SxTdotXDif.dot(SxT, XDif);
-    SxTdotU.dot(SxT, U);
-    t = SxTdotXDif / SxTdotU;
+    SxTdotXDif = SxT.dot(XDif);
+    SxTdotU = SxT.dot(U);
+    u = SxTdotXDif / SxTdotU;
+
+    cgp::Vector sumL (0,0,0);
+    for (int i = 0; i < dimx; ++i)
+    {
+        cgp::Vector sumM (0,0,0);
+        for (int j = 0; j < dimy; ++j)
+        {
+            cgp::Vector sumN (0,0,0);
+            for (int k = 0; k < dimz; ++k)
+            {
+                float result2 = nChoosek((float) dimz, (float) k) *  pow (1 - u, dimz - k) * pow(u, k);
+                cgp::Vector P (getCP(i,j,k).x, getCP(i,j,k).y, getCP(i,j,k).y);
+                P.mult(result2);
+                sumN.i = sumN.i + P.i;
+                sumN.j = sumN.j + P.j;
+                sumN.k = sumN.k + P.k;
+
+            }
+
+            float result1 = nChoosek((float) dimy, (float) j) * pow(1 - t, dimy - j) * pow(t, j);
+            sumN.mult(result1);
+            sumM.i = sumM.i + sumN.i;
+            sumM.j = sumM.j + sumN.j;
+            sumM.k = sumM.k + sumN.k; 
+        }
+
+        float result0 = nChoosek((float) dimx, (float) i) * pow(1 - s, dimx - i) * pow(s, i);
+        sumM.mult(result0);
+        sumL.i = sumL.i + sumL.i;
+        sumL.j = sumL.j + sumL.j;
+        sumL.k = sumL.k + sumL.k; 
+    }
 
 
     
 
+}
+
+float ffd::nChoosek(float n, float k)
+{
+    if (k > n) return 0;
+    if (k * 2 > n) k = n-k;
+    if (k == 0) return 1;
+
+    float result = n;
+    for( int i = 2; i <= k; ++i ) 
+    {
+        result *= (n-i+1);
+        result /= i;
+    }
+    return result;
 }

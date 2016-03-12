@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classstats_1_1TimerBase.html#a0b32850f67eb681a76ce2259e74bc635":[2,0,3,3,6],
 "classstats_1_1TimerBase.html#a3e2271d2ca30de56d2b9f43f22e9eabe":[2,0,3,3,2],
 "classstats_1_1TimerBase.html#a9b33c8ba0b2e2177c294de8be9af1634":[2,0,3,3,5],
 "classstats_1_1TimerBase.html#aaba79fc30d2a6e1d6b8342b4efeadf79":[2,0,3,3,4],
@@ -130,8 +131,8 @@ var NAVTREEINDEX2 =
 "namespacemembers_func.html":[1,1,1],
 "namespacemembers_vars.html":[1,1,2],
 "namespaces.html":[1,0],
-"namespacestats.html":[2,0,3],
 "namespacestats.html":[1,0,0],
+"namespacestats.html":[2,0,3],
 "namespacestats_1_1detail.html":[2,0,3,0],
 "namespacestats_1_1detail.html":[1,0,0,0],
 "obj_8cpp.html":[3,0,0,6],

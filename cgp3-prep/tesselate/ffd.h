@@ -139,6 +139,8 @@ public:
      * @todo ffd::deform to be completed for CGP Assignment3
      */
     void deform(cgp::Point & pnt);
+
+    float nChoosek(float n, float k);
 };
 
 #endif
