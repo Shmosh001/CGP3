@@ -304,6 +304,9 @@ void ffd::deform(cgp::Point & pnt)
         sumL.k = sumL.k + sumL.k; 
     }
 
+    pnt.x = sumL.i;
+    pnt.y = sumL.j;
+    pnt.z = sumL.k;
 
     
 
