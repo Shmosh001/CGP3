@@ -5,6 +5,7 @@
 #include "ffd.h"
 #include <stdio.h>
 
+
 using namespace std;
 
 GLfloat defaultLatCol[] = {0.2f, 0.2f, 0.2f, 1.0f};
@@ -272,7 +273,10 @@ void ffd::deform(cgp::Point & pnt)
     SxTdotU = SxT.dot(U);
     u = SxTdotXDif / SxTdotU;
 
-    
+    cerr << "s = " << s << endl;
+    cerr << "t = " << t << endl;
+    cerr << "u = " << u << endl;
+
 
     cgp::Vector sumL (0,0,0);
     for (int i = 0; i < dimx; ++i)

@@ -1044,9 +1044,11 @@ void Mesh::laplacianSmooth(int iter, float rate)
 
 void Mesh::applyFFD(ffd * lat)
 {
-    // stub, needs completing
+    for(int i = 0; i < verts.size(); ++i)
+    {
+        lat->deform(verts[i]);
+    }
 }
-
 bool Mesh::readSTL(string filename)
 {
     ifstream infile;
