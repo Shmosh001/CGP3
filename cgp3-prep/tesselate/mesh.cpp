@@ -897,8 +897,10 @@ void Mesh::marchingCubes(VoxelVolume vox)
     int dimX, dimY, dimZ;
     cgp::Point edgeVertex[12];
 
-
+    //obtain vox dimensions for x,y,z
     vox.getDim(dimX, dimY, dimZ);
+
+    //loop through all dimensions
     for (int x = 0; x < dimX-1; ++x)
     {
         for (int y = 0; y < dimY-1; ++y)
@@ -924,7 +926,8 @@ void Mesh::marchingCubes(VoxelVolume vox)
                         cgp::Point edgeXsect = vox.getMCEdgeXsect(iEdge);
                         //origin point of voxel corresponding to x,y,z
                         cgp::Point worldPoint = vox.getVoxelPos(x, y, z);
-                         
+                        
+                        //obtain diagonal of voxel
                         cgp::Point corner;
                         cgp::Vector diagonal;
                         vox.getFrame(corner, diagonal);
@@ -935,6 +938,7 @@ void Mesh::marchingCubes(VoxelVolume vox)
                         py = (float) edgeXsect.y / (float) (dimY-1);
                         pz = (float) edgeXsect.z / (float) (dimZ-1);
 
+                        //set new points
                         edgeV.x = worldPoint.x + px * (float) diagonal.i;
                         edgeV.y = worldPoint.y + py * (float) diagonal.j;
                         edgeV.z = worldPoint.z + pz * (float) diagonal.k; 
@@ -951,24 +955,27 @@ void Mesh::marchingCubes(VoxelVolume vox)
                         break;
                     }
 
+                    //temporary triangle 
                     Triangle tempTri;
-                    //each corner
+                    //each corner, add vertex to triangle 3 times
                     for (int iCorner = 0; iCorner < 3; ++iCorner)
                     {
                         int iVertex = triangleTable[vertBit][3*iTri+iCorner];
                         verts.push_back(edgeVertex[iVertex]);
+                        //adds vertex to triangle
                         tempTri.v[iCorner] = verts.size() -1;
                     }
 
+                    //add triangle to triangle list
                     tris.push_back(tempTri);
                 }
             }
         }
     }
+
     mergeVerts();
     deriveFaceNorms();
-    deriveVertNorms();
-    
+    deriveVertNorms();   
 
 }
 
@@ -976,7 +983,39 @@ void Mesh::laplacianSmooth(int iter, float rate)
 {
     // stub, needs completing
     //adjacency list for each vert
-    std::unordered_map<int, std::vector<int>> adjacencyList;
+    genAdjacencyList();
+    for (int i = 0; i < iter; ++i)
+    {
+        for (auto it = adjacencyList.begin(); it != adjacencyList.end(); it++)
+        {
+            //weight = 1/ num verts
+            float weight = 1.0 / (float) it->second.size();
+
+            float xDeltaV = 0;
+            float yDeltaV = 0;
+            float zDeltaV = 0;
+            for (int j = 0; j < it->second.size(); ++j)
+            {
+                //change in position for x,y,z
+                xDeltaV = xDeltaV + weight * (verts[it->second[j]].x - verts[it->first].x);
+                yDeltaV = yDeltaV + weight * (verts[it->second[j]].y - verts[it->first].y);
+                zDeltaV = zDeltaV + weight * (verts[it->second[j]].z - verts[it->first].z);
+            }
+
+            //adjust x,y,z positions
+            verts[it->first].x = verts[it->first].x + rate * xDeltaV; 
+            verts[it->first].y = verts[it->first].y + rate * yDeltaV; 
+            verts[it->first].z = verts[it->first].z + rate * zDeltaV;
+        }
+    }
+    mergeVerts();
+    deriveFaceNorms();
+    deriveVertNorms();
+}
+
+//populates adjacentcy list
+void Mesh::genAdjacencyList()
+{
     for (int x = 0; x < tris.size(); x++)  //loop through each triangle to get vectices
     {
         int vert0 = tris[x].v[0];
@@ -1013,37 +1052,11 @@ void Mesh::laplacianSmooth(int iter, float rate)
         }//end loop through edges
 
     } //end for loop of triangles
-
-    for (int i = 0; i < iter; ++i)
-    {
-        for (auto it = adjacencyList.begin(); it != adjacencyList.end(); it++)
-        {
-            float weight = 1.0 / (float) it->second.size();
-
-            float xDeltaV = 0;
-            float yDeltaV = 0;
-            float zDeltaV = 0;
-            for (int j = 0; j < it->second.size(); ++j)
-            {
-                //change in position for x,y,z
-                xDeltaV = xDeltaV + weight * (verts[it->second[j]].x - verts[it->first].x);
-                yDeltaV = yDeltaV + weight * (verts[it->second[j]].y - verts[it->first].y);
-                zDeltaV = zDeltaV + weight * (verts[it->second[j]].z - verts[it->first].z);
-            }
-
-            //adjust x,y,z positions
-            verts[it->first].x = verts[it->first].x + rate * xDeltaV; 
-            verts[it->first].y = verts[it->first].y + rate * yDeltaV; 
-            verts[it->first].z = verts[it->first].z + rate * zDeltaV;
-        }
-    }
-    mergeVerts();
-    deriveFaceNorms();
-    deriveVertNorms();
 }
 
 void Mesh::applyFFD(ffd * lat)
 {
+    //for each vertex, apply deform
     for(int i = 0; i < verts.size(); ++i)
     {
         lat->deform(verts[i]);

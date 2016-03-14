@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"classstats_1_1TimerBase.html":[2,0,3,3],
+"classstats_1_1TimerBase.html#a0a78ab0fe90fd356b5f002c755d646d2":[2,0,3,3,0],
 "classstats_1_1TimerBase.html#a0b32850f67eb681a76ce2259e74bc635":[2,0,3,3,6],
 "classstats_1_1TimerBase.html#a3e2271d2ca30de56d2b9f43f22e9eabe":[2,0,3,3,2],
 "classstats_1_1TimerBase.html#a9b33c8ba0b2e2177c294de8be9af1634":[2,0,3,3,5],

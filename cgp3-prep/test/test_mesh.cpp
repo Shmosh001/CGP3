@@ -57,6 +57,8 @@ void TestMesh::testMeshing()
     CPPUNIT_ASSERT(!mesh->manifoldValidity());
     cerr << "INVALID NON-2-MANIFOLD DETECTED CORRECTLY" << endl << endl;
 
+    
+
 }
 
 //#if 0 /* Disabled since it crashes the whole test suite */

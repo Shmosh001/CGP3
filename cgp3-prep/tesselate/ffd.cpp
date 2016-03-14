@@ -273,17 +273,20 @@ void ffd::deform(cgp::Point & pnt)
     SxTdotU = SxT.dot(U);
     u = SxTdotXDif / SxTdotU;
 
-
+    //vector for sum of L
     cgp::Vector sumL (0,0,0);
     for (int i = 0; i < dimx; ++i)
     {
+        //vector for sum of M
         cgp::Vector sumM (0,0,0);
         for (int j = 0; j < dimy; ++j)
         {
+            //vector for sum of N
             cgp::Vector sumN (0,0,0);
             for (int k = 0; k < dimz; ++k)
             {
                 float result2 = nChoosek(dimz-1, k) *  (float) pow(1 - u, dimz-1 - k) * (float) pow(u, k);
+                //get point at i,j,k
                 cgp::Point point = getCP(i,j,k);
                 cgp::Vector P (point.x, point.y, point.z);
                 P.mult(result2);
@@ -315,6 +318,9 @@ void ffd::deform(cgp::Point & pnt)
 
 }
 
+//N Choose K
+//Taken from Stack Overflow best upvoted answer
+//http://stackoverflow.com/questions/9330915/number-of-combinations-n-choose-r-in-c
 float ffd::nChoosek(float n, float k)
 {
     if (k > n) return 0;

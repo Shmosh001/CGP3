@@ -166,6 +166,7 @@ private:
     cgp::Vector trx;                 ///< translation
     float xrot, yrot, zrot;     ///< rotation angles about x, y, and z axes
     std::vector<Sphere> boundspheres; ///< bounding sphere accel structure
+    std::unordered_map<int, std::vector<int>> adjacencyList;
 
     /**
      * Search list of vertices to find matching point
@@ -315,6 +316,9 @@ public:
      */
     void laplacianSmooth(int iter, float rate);
 
+    //generates adjacency list for smoothing
+    void genAdjacencyList();
+
     /**
      * Apply a free-form deformation to the mesh
      * @param lat   ffd lattice being applied
@@ -376,6 +380,8 @@ public:
      * Build a simple tetrahedron that has a double shell breaking 2-manifold validity
      */
     void overlapTetTest();
+
+    
 };
 
 #endif
